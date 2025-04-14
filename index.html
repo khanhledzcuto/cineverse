@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Web Phim</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <a href="#">MovieApp</a>
+            </div>
+            
+            <div class="search-container">
+                <form id="searchForm">
+                    <input type="text" placeholder="Tìm kiếm phim,..." class="search-input" id="searchInput">
+                    <button type="submit" class="search-button">
+                        <i class="fa-solid fa-search"></i>
+                    </button>
+                </form>
+                <div class="search-results" id="searchResults">
+                </div>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Trang chủ</a></li>
+                    <li><a href="#trend">Xu hướng</a></li>
+                    <li><a href="#viet">Phim Việt</a></li>
+                    <li><a href="#ng">Phim nước ngoài</a>
+                        <li class="nav-saved">
+                            <a href="#">Kho lưu trữ</a>
+                            <div class="saved-dropdown">
+                              <div class="saved-section">
+                                <h4>📌 Đã xem</h4>
+                                <ul id="watchedList">
+                                  <li>Chưa có mục nào</li>
+                                </ul>
+                              </div>
+                              <div class="saved-section">
+                                <h4>⭐ Muốn xem</h4>
+                                <ul id="watchlist">
+                                  <li>Chưa có mục nào</li>
+                                </ul>
+                              </div>
+                            </div>
+                          </li>
+                          
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="user-actions">
+                <button class="btn-login">Đăng nhập</button>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <section class="hero-section">
+            <div class="hero-video-container">
+                <video autoplay muted loop id="heroVideo">
+                    <source src="assets/intro.mp4" type="video/mp4">
+                </video>
+                <div class="hero-overlay"></div>
+            </div>
+            <div class="container hero-content">
+                <h1>Khám phá những thước phim yêu thích</h1>
+                <p>Đánh giá, lưu và chia sẻ những bộ phim bạn yêu thích</p>
+                <button class="btn-hero-login" id="heroLoginBtn">Đăng nhập ngay</button>
+                <p class="hero-greeting" id="heroGreeting" style="display: none;">
+                  Xin chào, <span id="heroUsername"></span>!
+                </p>
+            </div>
+        </section>
+        
+        <section class="trending-section" id="trend">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Xu hướng</h2>
+                    <a href="#" class="view-all">Xem tất cả</a>
+                </div>
+                
+                <div class="media-grid">
+                    <!-- Phim 1 -->
+                    <div class="media-card" data-movie-id="1">
+                        <div class="media-poster">
+                            <img src="assets/trending/skyforce.png" alt="Skyforce">
+                            <div class="media-hover">
+                                <div class="rating">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>4.8</span>
+                                </div>
+                                <button class="btn-watch">Chi tiết</button>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3 class="media-title">Skyforce</h3>
+                            <p class="media-creator">Sandeep Kewlani</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Phim 2 -->
+                    <div class="media-card" data-movie-id="2">
+                        <div class="media-poster">
+                            <img src="assets/trending/dominionofdarkness.png" alt="Nghi lễ trục quỷ">
+                            <div class="media-hover">
+                                <div class="rating">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>4.9</span>
+                                </div>
+                                <button class="btn-watch">Chi tiết</button>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3 class="media-title">Nghi lễ trục quỷ</h3>
+                            <p class="media-creator">Bobby Prasetyo</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Phim 3 -->
+                    <div class="media-card" data-movie-id="3">
+                        <div class="media-poster">
+                            <img src="assets/trending/hitman.png" alt="hitman">
+                            <div class="media-hover">
+                                <div class="rating">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>4.7</span>
+                                </div>
+                                <button class="btn-watch">Chi tiết</button>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3 class="media-title">Sát thủ vô cùng cực hài</h3>
+                            <p class="media-creator">Choi Won-sub</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Phim 4 -->
+                    <div class="media-card" data-movie-id="4">
+                        <div class="media-poster">
+                            <img src="assets/trending/blue.png" alt="BluePeriod">
+                            <div class="media-hover">
+                                <div class="rating">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>4.6</span>
+                                </div>
+                                <button class="btn-watch">Chi tiết</button>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3 class="media-title">Thời kì xanh</h3>
+                            <p class="media-creator">Naoki Yamakawa</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Phim 5 -->
+                    <div class="media-card" data-movie-id="5">
+                        <div class="media-poster">
+                            <img src="assets/trending/100yards.png" alt="100Yards">
+                            <div class="media-hover">
+                                <div class="rating">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>4.3</span>
+                                </div>
+                                <button class="btn-watch">Chi tiết</button>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3 class="media-title">Môn Tiền Bảo Địa</h3>
+                            <p class="media-creator">Xu Haofeng</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="film-section" id="ng">
+            <div class="container">
+                <div class="section-header" >
+                    <h2>Phim Nước Ngoài</h2>
+                    <a href="#" class="view-all">Xem tất cả</a>
+                </div>
+                <div class="media-grid">
+                    <!-- Phim 1 -->
+                    <div class="media-card" data-movie-id="6">
+                        <div class="media-poster">
+                            <img src="assets/phimnuocngoai/ngoitruongxacsong.jpeg" alt="AOOAD">
+                            <div class="media-hover">
+                                <div class="rating">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>4.8</span>
+                                </div>
+                                <button class="btn-watch">Chi tiết</button>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3 class="media-title">All Of Us Are Dead</h3>
+                            <p class="media-creator">Lee Jae-kyoo</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Phim 2 -->
+                    <div class="media-card" data-movie-id="7">
+                        <div class="media-poster">
+                            <img src="assets/phimnuocngoai/Loki.jpeg" alt="Loki">
+                            <div class="media-hover">
+                                <div class="rating">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>4.9</span>
+                                </div>
+                                <button class="btn-watch">Chi tiết</button>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3 class="media-title">Loki</h3>
+                            <p class="media-creator">Kate Herron</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Phim 3 -->
+                    <div class="media-card" data-movie-id="8">
+                        <div class="media-poster">
+                            <img src="assets/phimnuocngoai/Crullea.jpeg" alt="Crullea">
+                            <div class="media-hover">
+                                <div class="rating">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>4.7</span>
+                                </div>
+                                <button class="btn-watch">Chi tiết</button>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3 class="media-title">Cruellea</h3>
+                            <p class="media-creator">Craig Gillespie</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Phim 4 -->
+                    <div class="media-card" data-movie-id="9">
+                        <div class="media-poster">
+                            <img src="assets/phimnuocngoai/Avengers - Endgame.jpeg" alt="Avengers">
+                            <div class="media-hover">
+                                <div class="rating">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>4.6</span>
+                                </div>
+                                <button class="btn-watch">Chi tiết</button>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3 class="media-title">Avengers: Endgame</h3>
+                            <p class="media-creator">Anthony</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Phim 5 -->
+                    <div class="media-card" data-movie-id="10">
+                        <div class="media-poster">
+                            <img src="assets/phimnuocngoai/avatar.jpeg" alt="Avatar">
+                            <div class="media-hover">
+                                <div class="rating">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>4.3</span>
+                                </div>
+                                <button class="btn-watch">Chi tiết</button>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3 class="media-title">Avatar</h3>
+                            <p class="media-creator">James Cameron</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+                <!-- Thêm grid phim phổ biến tương tự như phần trên -->
+            </div>
+        </section>
+        <section class="vietnamese-film-section" id="viet">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Phim Việt</h2>
+                    <a href="#" class="view-all">Xem tất cả</a>
+                </div>
+                
+                <!-- Thêm grid phim phổ biến tương tự như phần trên -->
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="#">MovieApp</a>
+                </div>
+                <p>&copy; 2025 MovieApp. Tất cả quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+       <!-- Modal chi tiết phim -->
+       <div id="mediaDetailModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            
+            <div class="media-detail">
+                <div class="media-poster">
+                    <img src="" alt="" id="modal-poster">
+                </div>
+                
+                <div class="media-info">
+                    <h1 class="media-title" id="modal-title"></h1>
+                    
+                    <div class="media-meta">
+                        <span class="year" id="modal-year"></span>
+                        <span class="divider">•</span>
+                        <span class="genre" id="modal-genre"></span>
+                        <span class="divider">•</span>
+                        <span class="duration" id="modal-duration"></span>
+                    </div>
+                    
+                    <div class="media-creator">
+                        <strong>Đạo diễn/Tác giả:</strong> <span id="modal-creator"></span>
+                    </div>
+                    
+                    <div class="rating-container">
+                        <div class="stars" id="modal-stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-alt"></i>
+                        </div>
+                        <span class="rating-value" id="modal-rating"></span>
+                        <span class="rating-count" id="modal-rating-count"></span>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn-watched">
+                            <i class="fa-solid fa-check"></i> Đã xem
+                        </button>
+                        <button class="btn-watchlist">
+                            <i class="fa-solid fa-bookmark"></i> Muốn xem
+                        </button>
+                        <button class="btn-more-info">
+                            <i class="fa-solid fa-circle-info"></i> Tìm hiểu thêm
+                        </button>
+                    </div>
+                    
+                    <div class="synopsis">
+                        <h3>Tóm tắt</h3>
+                        <p id="modal-synopsis"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- Trang chi tiết phim -->
+<div id="detailPage" class="detail-page">
+    <div class="detail-header">
+        <div class="container">
+            <button class="btn-back">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại
+            </button>
+            <h1 class="detail-title" id="detail-title"></h1>
+        </div>
+    </div>
+
+    <div class="container detail-content">
+        <div class="detail-main">
+            <div class="detail-poster">
+                <img src="" alt="" id="detail-poster">
+                <div class="detail-rating">
+                    <div class="stars" id="detail-stars">
+                        <!-- Stars will be added via JS -->
+                    </div>
+                    <span class="rating-value" id="detail-rating"></span>
+                    <span class="rating-count" id="detail-rating-count"></span>
+                </div>
+            </div>
+
+            <div class="detail-info">
+                <div class="detail-meta">
+                    <span class="year" id="detail-year"></span>
+                    <span class="divider">•</span>
+                    <span class="genre" id="detail-genre"></span>
+                    <span class="divider">•</span>
+                    <span class="duration" id="detail-duration"></span>
+                </div>
+
+                <div class="detail-creator">
+                    <strong>Đạo diễn/Tác giả:</strong> <span id="detail-creator"></span>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-watched">
+                        <i class="fa-solid fa-check"></i> Đã xem/đọc
+                    </button>
+                    <button class="btn-watchlist">
+                        <i class="fa-solid fa-bookmark"></i> Muốn xem/đọc
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-video">
+            <h3>Trailer</h3>
+            <div class="video-container" id="detail-video">
+                <!-- YouTube video will be embedded here -->
+            </div>
+        </div>
+
+        <div class="detail-synopsis">
+            <h3>Tóm tắt</h3>
+            <p id="detail-synopsis"></p>
+        </div>
+        
+        <div class="detail-additional">
+            <h3>Thông tin thêm</h3>
+            <div id="detail-additional">
+                <!-- Additional info will be added here -->
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Trang xem tất cả phim -->
+<div id="allMoviesPage" class="all-movies-page">
+    <div class="all-movies-header">
+        <div class="container">
+            <button class="btn-back all-movies-back">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại
+            </button>
+            <h1 class="all-movies-title">Tất cả phim</h1>
+        </div>
+    </div>
+
+    <div class="container all-movies-content">
+        <div class="filter-controls">
+            <div class="filter-section">
+                <label for="sort-select">Sắp xếp theo:</label>
+                <select id="sort-select" class="filter-select">
+                    <option value="rating-desc">Đánh giá cao nhất</option>
+                    <option value="rating-asc">Đánh giá thấp nhất</option>
+                    <option value="year-desc">Năm mới nhất</option>
+                    <option value="year-asc">Năm cũ nhất</option>
+                </select>
+            </div>
+            <div class="filter-section">
+                <label for="genre-select">Thể loại:</label>
+                <select id="genre-select" class="filter-select">
+                    <option value="all">Tất cả</option>
+                    <option value="action">Hành động</option>
+                    <option value="drama">Chính kịch</option>
+                    <option value="comedy">Hài</option>
+                    <option value="horror">Kinh dị</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="all-movies-grid" id="allMoviesGrid">
+            <!-- Movies will be added here by JavaScript -->
+        </div>
+    </div>
+</div>
+<div id="notification" class="notification" style="display: none;"></div>
+<!-- Modal đăng nhập -->
+<div id="loginModal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+      <span class="close-modal">&times;</span>
+      <h2>Đăng nhập</h2>
+      <form id="loginForm">
+        <div style="margin: 15px 0;">
+          <input type="text" id="username" placeholder="Tên người dùng" required style="width: 100%; padding: 10px;">
+        </div>
+        <button type="submit" class="btn-login" style="width: 100%;">Đăng nhập</button>
+      </form>
+    </div>
+  </div>
+  
+    <script src="script.js"></script>
+</body>
+</html>
