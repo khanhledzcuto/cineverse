@@ -1,5 +1,7 @@
 // Dữ liệu phim/sách (trong thực tế sẽ lấy từ API hoặc cơ sở dữ liệu)
+let detailPlayer = null;
 const userDatabase = [];
+let isLoggedIn = false;
 const mediaDatabase = [
   {
     id: 1,
@@ -178,6 +180,83 @@ const mediaDatabase = [
       { title: "Ngày phát hành", content: "18 tháng 12, 2009" },
       { title: "Hãng sản xuất", content: "Lightstorm Entertainment, 20th Century Fox" }
     ]
+  },
+  {
+    id: 11,
+    title: "Mai",
+    poster: "assets/phimviet/mai.png",
+    year: "2025",
+    genre: "Tâm lý, Chính kịch",
+    duration: "130 phút",
+    creator: "Trấn Thành",
+    rating: 4.5,
+    ratingCount: 342,
+    country: "Việt Nam",
+    synopsis: "Phim kể về Mai (Phương Anh Đào), một cô gái quê bị tổn thương sâu sắc, lên thành phố làm nghề massage trị liệu. Tại đây, cô gặp Dương – một chàng trai nhà giàu đang tìm cảm hứng sáng tác. Câu chuyện tình yêu giữa họ mở ra hành trình chữa lành và tìm lại chính mình.",
+    youtubeId: "aSla854DQiM",
+    additionalInfo: []
+  },
+  {
+    id: 12,
+    title: "Lật Mặt 7: Một điều ước",
+    poster: "assets/phimviet/latmat7.png",
+    year: "2025",
+    genre: "Tâm lý, Gia đình",
+    duration: "120 phút",
+    creator: "Lý Hải",
+    rating: 4.8,
+    ratingCount: 297,
+    country: "Việt Nam",
+    synopsis: "Phần thứ 7 trong loạt phim \"Lật Mặt\" tiếp tục khai thác đề tài gia đình. Phim theo chân bà Hai trong hành trình thăm từng người con, qua đó hé lộ những bí mật và mâu thuẫn gia đình, mang đến những cung bậc cảm xúc sâu lắng.",
+    youtubeId: "8_VIDJQkxGo",
+    additionalInfo: []
+  },
+  {
+    id: 13,
+    title: "Làm Giàu Với Ma",
+    poster: "assets/phimviet/lamgiauvoima.png",
+    year: "2025",
+    genre: "Hài, Kinh dị, Gia đình",
+    duration: "110 phút",
+    creator: "Nhật Trung (Trung Lùn)",
+    rating: 4.3,
+    ratingCount: 421,
+    country: "Việt Nam",
+    synopsis: "Phim kể về một gia đình nghèo vô tình gặp phải hồn ma hài hước, từ đó dẫn đến những tình huống dở khóc dở cười. Sự kết hợp giữa yếu tố hài hước và kinh dị mang đến trải nghiệm giải trí độc đáo cho khán giả.",
+    youtubeId: "po9g5akeOxs",
+    additionalInfo: []
+  },
+  {
+    id: 14,
+    title: "Bộ tứ báo thủ",
+    poster: "assets/phimviet/botubaothu.png",
+    year: "2025",
+    genre: "Hài, Lãng mạn",
+    duration: "133 phút",
+    creator: "Trấn Thành",
+    rating: 4.7,
+    ratingCount: 278,
+    country: "Việt Nam",
+    synopsis: "Phim xoay quanh một nhóm bạn thân và những tình huống dở khóc dở cười trong cuộc sống và tình yêu.",
+    youtubeId: "YwJ2164RzS0",
+    additionalInfo: [
+      { title: "Doanh thu", content: "Cán mốc 100 tỷ đồng chỉ sau 3 ngày công chiếu." }
+    ]
+  },
+  {
+    id: 15,
+    title: "Quỷ Cẩu",
+    poster: "assets/phimviet/quycau.png",
+    year: "2025",
+    genre: "Kinh dị, Giật gân",
+    duration: "100 phút",
+    creator: "Lưu Thành Luân",
+    rating: 4.9,
+    ratingCount: 195,
+    country: "Việt Nam",
+    synopsis: "Lấy cảm hứng từ truyền thuyết \"Chó đội nón mê\", phim kể về những sự kiện kỳ bí xảy ra tại một ngôi làng khi một sinh vật huyền bí xuất hiện. Tác phẩm gây chú ý với đề tài mới lạ và thông điệp về việc bảo vệ động vật.",
+    youtubeId: "7CcNazJUmoY",
+    additionalInfo: []
   }
 ];
 const watchedStates = {};
@@ -185,37 +264,87 @@ const watchedStates = {};
   
   // Các phần tử DOM
 document.addEventListener("DOMContentLoaded", function() {
-    // Lấy các phần tử DOM cho modal
-    const modal = document.getElementById("mediaDetailModal");
-    const detailButtons = document.querySelectorAll(".btn-watch");
-    const closeModal = document.querySelector(".close-modal");
+  // Lấy các phần tử DOM cho modal
+  const modal = document.getElementById("mediaDetailModal");
+  const detailButtons = document.querySelectorAll(".btn-watch");
+  const closeModal = document.querySelector(".close-modal");
     
-    // Các phần tử DOM cho tìm kiếm
-    const searchForm = document.getElementById("searchForm");
-    const searchInput = document.getElementById("searchInput");
-    const searchResults = document.getElementById("searchResults");
-    const searchContainer = document.querySelector(".search-container");
+  // Các phần tử DOM cho tìm kiếm
+  const searchForm = document.getElementById("searchForm");
+  const searchInput = document.getElementById("searchInput");
+  const searchResults = document.getElementById("searchResults");
+  const searchContainer = document.querySelector(".search-container");
 
-    const detailPage = document.getElementById("detailPage");
+  const detailPage = document.getElementById("detailPage");
   const btnBack = document.querySelector(".btn-back");
   
-    // Thêm sự kiện click cho các nút chi tiết
-    detailButtons.forEach((button) => {
-      button.addEventListener("click", function() {
-        const mediaCard = this.closest(".media-card");
-        const movieId = parseInt(mediaCard.dataset.movieId);
-        openMediaDetail(movieId);
-      });
+  // Thêm sự kiện click cho các nút chi tiết
+  detailButtons.forEach((button) => {
+    button.addEventListener("click", function() {
+      const mediaCard = this.closest(".media-card");
+      const movieId = parseInt(mediaCard.dataset.movieId);
+      openMediaDetail(movieId);
     });
+  });
+  const fakeComments = [
+    { user: "JohnDoe", comment: "Phim này rất tuyệt vời!" },
+    { user: "JaneSmith", comment: "Tôi thích diễn xuất của các diễn viên." },
+    { user: "MovieFan123", comment: "Cảnh hành động mãn nhãn!" },
+  ];
+  const commentList = document.getElementById("commentList");
+  fakeComments.forEach((item) => {
+    const commentDiv = document.createElement("div");
+    commentDiv.classList.add("comment-item");
+    commentDiv.innerHTML = `<strong>${item.user}:</strong> ${item.comment}`;
+    commentList.appendChild(commentDiv);
+  });
+
+    // Xử lý bình luận
+    const submitComment = document.getElementById("submitComment");
+    const commentInput = document.getElementById("commentInput");
+
+    submitComment.addEventListener("click", () => {
+      if (!isLoggedIn) {
+        Swal.fire({
+          title: 'Bạn cần đăng nhập để bình luận',
+          icon: 'error',
+          timer: 1500,
+          showConfirmButton: true
+        });
+      } else {
+        const commentText = commentInput.value.trim();
+        if (commentText) {
+          const currentMedia = getCurrentDetailMedia();
+          if (!currentMedia) return;
+    
+          // Hiển thị ra giao diện
+          const newComment = document.createElement("div");
+          newComment.classList.add("comment-item");
+          newComment.innerHTML = `<strong>Bạn:</strong> ${commentText}`;
+          commentList.appendChild(newComment);
+          commentInput.value = "";
+    
+          // Lưu vào localStorage
+          let data = JSON.parse(localStorage.getItem("ratingsAndComments")) || {};
+          const mediaId = currentMedia.id;
+          if (!data[mediaId]) data[mediaId] = { rating: 0, comments: [] };
+          data[mediaId].comments.push(commentText);
+          localStorage.setItem("ratingsAndComments", JSON.stringify(data));
+        } else {
+          alert("Vui lòng nhập nội dung bình luận!");
+        }
+      }
+    });
+    
   
-    // Đóng modal khi nhấn nút đóng
-    closeModal.addEventListener("click", () => {
-      modal.style.display = "none";
-      document.body.classList.remove("modal-open");
-    });
+  // Đóng modal khi nhấn nút đóng
+  closeModal.addEventListener("click", () => {
+    modal.style.display = "none";
+    document.body.classList.remove("modal-open");
+  });
   
   // Đóng modal khi nhấn ra ngoài
-    window.addEventListener("click", (event) => {
+  window.addEventListener("click", (event) => {
     if (event.target === modal) {
       modal.style.display = "none";
       document.body.classList.remove("modal-open");
@@ -322,7 +451,7 @@ document.addEventListener("DOMContentLoaded", function() {
               ${item.year} • ${item.genre} • ${item.creator}
             </div>
             <div class="search-result-rating">
-              <i class="fas fa-star" style="color: var(--secondary-color)"></i>
+              <i class="fa-solid fa-star" style="color: var(--secondary-color)"></i>
               ${item.rating}
             </div>
           </div>
@@ -396,7 +525,15 @@ document.addEventListener("DOMContentLoaded", function() {
     } else {
       watchedBtn.classList.remove("active"); // Không có màu nền nếu chưa xem
     }
-   
+    const watchlistBtn = document.querySelector(".btn-watchlist");
+    const watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+    
+    if (watchlist.includes(media.title)) {
+      watchlistBtn.classList.add("active");
+    } else {
+      watchlistBtn.classList.remove("active");
+    }
+    
     
     // Hiển thị modal
     modal.style.display = "block";
@@ -415,14 +552,14 @@ document.addEventListener("DOMContentLoaded", function() {
     // Thêm sao đầy
     for (let i = 0; i < fullStars; i++) {
       const star = document.createElement("i");
-      star.className = "fas fa-star";
+      star.className = "fa-solid fa-star";
       starsContainer.appendChild(star);
     }
     
     // Thêm nửa sao nếu có
     if (hasHalfStar) {
       const halfStar = document.createElement("i");
-      halfStar.className = "fas fa-star-half-alt";
+      halfStar.className = "fa-solid fa-star-half-alt";
       starsContainer.appendChild(halfStar);
     }
     
@@ -457,7 +594,24 @@ document.addEventListener("DOMContentLoaded", function() {
             removeFromSaved(media, "watched");
         }
     }
-});
+    const watchlistBtn = e.target.closest(".btn-watchlist");
+    if (watchlistBtn) {
+      const mediaTitle = document.getElementById("modal-title").textContent;
+      const media = mediaDatabase.find(item => item.title === mediaTitle);
+    if (!media) return;
+
+     // Toggle active class
+      const movieId = media.id;
+      watchlistBtn.classList.toggle("active");
+
+    if (watchlistBtn.classList.contains("active")) {
+      addToSaved(media, "watchlist");
+    } else {
+      removeFromSaved(media, "watchlist");
+    }
+    }
+
+  });
   
   // Thêm animation cho modal khi hiển thị
   function animateModal() {
@@ -522,18 +676,26 @@ document.addEventListener("DOMContentLoaded", function() {
     // Thêm video YouTube
     if (media.youtubeId) {
       document.getElementById("detail-video").innerHTML = `
-        <iframe src="https://www.youtube.com/embed/${media.youtubeId}" 
-          title="${media.title} trailer" 
-          frameborder="0" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-          allowfullscreen>
-        </iframe>
+        <div class="video-wrapper">
+          <div class="plyr__video-embed" id="player">
+            <iframe
+              src="https://www.youtube.com/embed/${media.youtubeId}?origin=${location.origin}&iv_load_policy=3&modestbranding=1&rel=0&showinfo=0&autoplay=0"
+              allowfullscreen
+              allow="autoplay; encrypted-media"
+            ></iframe>
+          </div>
+        </div>
       `;
+    
+      // Gắn player
+      detailPlayer = new Plyr('#player', {
+        autoplay: false,
+        controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen']
+      });
     } else {
-      document.getElementById("detail-video").innerHTML = `
-        <div class="no-video">Video không khả dụng</div>
-      `;
+      document.getElementById("detail-video").innerHTML = `<div class="no-video">Video không khả dụng</div>`;
     }
+    
     
     // Thêm thông tin bổ sung
     const additionalContainer = document.getElementById("detail-additional");
@@ -552,7 +714,10 @@ document.addEventListener("DOMContentLoaded", function() {
     } else {
       additionalContainer.innerHTML = "<p>Không có thông tin bổ sung.</p>";
     }
-    
+    createInteractiveStars();
+    selectedRating = 0;
+    feedbackText.textContent = "";
+
     // Hiển thị trang chi tiết
     detailPage.classList.add("show");
     document.body.style.overflow = "hidden"; // Ngăn cuộn trang
@@ -565,6 +730,9 @@ document.addEventListener("DOMContentLoaded", function() {
   function closeDetailPage() {
     detailPage.classList.remove("show");
     document.body.style.overflow = ""; // Khôi phục cuộn trang
+    if (detailPlayer) {
+      detailPlayer.pause();
+    }    
   }
   
   // Hàm cập nhật hiển thị sao dựa trên đánh giá trong trang chi tiết
@@ -579,14 +747,14 @@ document.addEventListener("DOMContentLoaded", function() {
     // Thêm sao đầy
     for (let i = 0; i < fullStars; i++) {
       const star = document.createElement("i");
-      star.className = "fas fa-star";
+      star.className = "fa-solid fa-star";
       starsContainer.appendChild(star);
     }
     
     // Thêm nửa sao nếu có
     if (hasHalfStar) {
       const halfStar = document.createElement("i");
-      halfStar.className = "fas fa-star-half-alt";
+      halfStar.className = "fa-solid fa-star-half-alt";
       starsContainer.appendChild(halfStar);
     }
     
@@ -599,347 +767,500 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
   // Thêm code này vào phần cuối của file script.js, bên trong DOMContentLoaded event
-const allMoviesPage = document.getElementById("allMoviesPage");
-const viewAllButtons = document.querySelectorAll(".view-all");
-const allMoviesBackButton = document.querySelector(".all-movies-back");
-const allMoviesGrid = document.getElementById("allMoviesGrid");
-const sortSelect = document.getElementById("sort-select");
-const genreSelect = document.getElementById("genre-select");
+  const allMoviesPage = document.getElementById("allMoviesPage");
+  const viewAllButtons = document.querySelectorAll(".view-all");
+  const allMoviesBackButton = document.querySelector(".all-movies-back");
+  const allMoviesGrid = document.getElementById("allMoviesGrid");
+  const sortSelect = document.getElementById("sort-select");
+  const genreSelect = document.getElementById("genre-select");
 
-// Xử lý nút "Xem tất cả"
-viewAllButtons.forEach(button => {
-  button.addEventListener("click", function(e) {
-    e.preventDefault();
+  // Xử lý nút "Xem tất cả"
+  viewAllButtons.forEach(button => {
+    button.addEventListener("click", function(e) {
+      e.preventDefault();
     
-    // Xác định loại phim nào được chọn dựa vào section
-    const sectionTitle = this.closest(".section-header").querySelector("h2").textContent;
-    document.querySelector(".all-movies-title").textContent = `Tất cả ${sectionTitle}`;
+      // Xác định loại phim nào được chọn dựa vào section
+      const sectionTitle = this.closest(".section-header").querySelector("h2").textContent;
+      document.querySelector(".all-movies-title").textContent = `Tất cả ${sectionTitle}`;
     
-    // Lọc danh sách phim dựa theo section
-    let filteredMovies = [];
-    if (sectionTitle === "Xu hướng") {
-      // Hiển thị tất cả phim
-      filteredMovies = [...mediaDatabase];
-    } else if (sectionTitle === "Phim Việt") {
-      // Lọc phim Việt (đây là ví dụ, bạn cần thêm thuộc tính country vào database)
-      filteredMovies = mediaDatabase.filter(movie => movie.country === "Vietnam");
-    } else if (sectionTitle === "Phim Nước Ngoài") {
-      // Lọc phim nước ngoài
+      // Lọc danh sách phim dựa theo section
+      let filteredMovies = [];
+      if (sectionTitle === "Xu hướng") {
+        // Hiển thị tất cả phim
+        filteredMovies = [...mediaDatabase];
+      } else if (sectionTitle === "Phim Việt") {
+        // Lọc phim Việt (đây là ví dụ, bạn cần thêm thuộc tính country vào database)
+        filteredMovies = mediaDatabase.filter(movie => movie.country === "Vietnam");
+      } else if (sectionTitle === "Phim Nước Ngoài") {
+        // Lọc phim nước ngoài
       filteredMovies = mediaDatabase.filter(movie => movie.country !== "Vietnam");
     }
     
     renderAllMovies(filteredMovies);
     allMoviesPage.classList.add("show");
     document.body.style.overflow = "hidden";
-  });
-});
-
-// Nút quay lại từ trang xem tất cả
-allMoviesBackButton.addEventListener("click", function() {
-  allMoviesPage.classList.remove("show");
-  document.body.style.overflow = "";
-});
-
-// Lọc và sắp xếp phim
-sortSelect.addEventListener("change", function() {
-  applyFilters();
-});
-
-genreSelect.addEventListener("change", function() {
-  applyFilters();
-});
-
-// Hàm áp dụng bộ lọc
-function applyFilters() {
-  const sortBy = sortSelect.value;
-  const genreFilter = genreSelect.value;
-  
-  let filteredMovies = [...mediaDatabase];
-  
-  // Lọc theo thể loại
-  if (genreFilter !== "all") {
-    filteredMovies = filteredMovies.filter(movie => 
-      movie.genre.toLowerCase().includes(genreFilter.toLowerCase())
-    );
-  }
-  
-  // Sắp xếp
-  switch(sortBy) {
-    case "rating-desc":
-      filteredMovies.sort((a, b) => b.rating - a.rating);
-      break;
-    case "rating-asc":
-      filteredMovies.sort((a, b) => a.rating - b.rating);
-      break;
-    case "year-desc":
-      filteredMovies.sort((a, b) => parseInt(b.year) - parseInt(a.year));
-      break;
-    case "year-asc":
-      filteredMovies.sort((a, b) => parseInt(a.year) - parseInt(b.year));
-      break;
-  }
-  
-  renderAllMovies(filteredMovies);
-}
-
-// Hiển thị danh sách phim
-function renderAllMovies(movies) {
-  allMoviesGrid.innerHTML = '';
-  
-  if (movies.length === 0) {
-    allMoviesGrid.innerHTML = '<p class="no-results">Không tìm thấy phim phù hợp</p>';
-    return;
-  }
-  
-  movies.forEach(movie => {
-    const movieCard = document.createElement('div');
-    movieCard.className = 'media-card';
-    movieCard.dataset.movieId = movie.id;
-    
-    movieCard.innerHTML = `
-      <div class="media-poster">
-        <img src="${movie.poster}" alt="${movie.title}">
-        <div class="media-hover">
-          <div class="rating">
-            <i class="fa-solid fa-star"></i>
-            <span>${movie.rating}</span>
-          </div>
-          <button class="btn-watch">Chi tiết</button>
-        </div>
-      </div>
-      <div class="media-info">
-        <h3 class="media-title">${movie.title}</h3>
-        <p class="media-creator">${movie.creator}</p>
-      </div>
-    `;
-    
-    // Thêm event listener cho nút chi tiết trong mỗi card
-    const detailButton = movieCard.querySelector('.btn-watch');
-    detailButton.addEventListener('click', function() {
-      openMediaDetail(movie.id);
     });
-    
-    allMoviesGrid.appendChild(movieCard);
   });
-}
 
-// Thực hiện lọc lần đầu khi trang tải
-function initializeGenreOptions() {
-  // Tạo danh sách thể loại từ database
-  const genres = new Set();
+  // Nút quay lại từ trang xem tất cả
+  allMoviesBackButton.addEventListener("click", function() {
+    allMoviesPage.classList.remove("show");
+    document.body.style.overflow = "";
+  });
+
+  // Lọc và sắp xếp phim
+  sortSelect.addEventListener("change", function() {
+    applyFilters();
+  });
+
+  genreSelect.addEventListener("change", function() {
+    applyFilters();
+  });
+
+  // Hàm áp dụng bộ lọc
+  function applyFilters() {
+    const sortBy = sortSelect.value;
+    const genreFilter = genreSelect.value;
   
-  mediaDatabase.forEach(movie => {
-    const movieGenres = movie.genre.split(', ');
-    movieGenres.forEach(genre => genres.add(genre));
-  });
+    let filteredMovies = [...mediaDatabase];
   
-  // Cập nhật tùy chọn thể loại
-  genreSelect.innerHTML = '<option value="all">Tất cả</option>';
-  
-  genres.forEach(genre => {
-    const option = document.createElement('option');
-    option.value = genre.toLowerCase();
-    option.textContent = genre;
-    genreSelect.appendChild(option);
-  });
-}
-
-// Khởi tạo tùy chọn thể loại
-initializeGenreOptions();
-// Xử lý active cho navigation
-const navLinks = document.querySelectorAll("nav ul li a");
-
-navLinks.forEach(link => {
-  link.addEventListener("click", function () {
-    navLinks.forEach(l => l.classList.remove("active"));
-    this.classList.add("active");
-  });
-});
-const loginBtn = document.querySelector(".btn-login");
-const loginModal = document.getElementById("loginModal");
-const closeLoginModal = loginModal.querySelector(".close-modal");
-const loginForm = document.getElementById("loginForm");
-const usernameInput = document.getElementById("username");
-const heroLoginBtn = document.getElementById("heroLoginBtn");
-
-function checkLoginStatus() {
-  const user = localStorage.getItem("user");
-  const heroGreeting = document.getElementById("heroGreeting");
-  const heroUsername = document.getElementById("heroUsername");
-
-  if (user) {
-    loginBtn.textContent = `Xin chào, ${user}`;
-    loginBtn.classList.add("logged-in");
-
-    if (heroLoginBtn) heroLoginBtn.style.display = "none";
-    if (heroGreeting) {
-      heroGreeting.style.display = "block";
-      heroUsername.textContent = user;
+    // Lọc theo thể loại
+    if (genreFilter !== "all") {
+      filteredMovies = filteredMovies.filter(movie => 
+      movie.genre.toLowerCase().includes(genreFilter.toLowerCase())
+      );
     }
-  } else {
-    loginBtn.textContent = "Đăng nhập";
-    loginBtn.classList.remove("logged-in");
-
-    if (heroLoginBtn) heroLoginBtn.style.display = "inline-block";
-    if (heroGreeting) heroGreeting.style.display = "none";
+  
+    // Sắp xếp
+    switch(sortBy) {
+      case "rating-desc":
+        filteredMovies.sort((a, b) => b.rating - a.rating);
+        break;
+      case "rating-asc":
+        filteredMovies.sort((a, b) => a.rating - b.rating);
+        break;
+      case "year-desc":
+        filteredMovies.sort((a, b) => parseInt(b.year) - parseInt(a.year));
+        break;
+      case "year-asc":
+        filteredMovies.sort((a, b) => parseInt(a.year) - parseInt(b.year));
+        break;
+      }
+  
+    renderAllMovies(filteredMovies);
   }
-}
-checkLoginStatus();
-loginBtn.addEventListener("click", () => {
-  const user = localStorage.getItem("user");
-  if (user) {
-    Swal.fire({
-      title: 'Bạn muốn đăng xuất?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Đăng xuất',
-      cancelButtonText: 'Hủy',
-      confirmButtonColor: '#F97316'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        localStorage.removeItem("user");
-        checkLoginStatus();
+
+  // Hiển thị danh sách phim
+  function renderAllMovies(movies) {
+    allMoviesGrid.innerHTML = '';
+
+    if (movies.length === 0) {
+      allMoviesGrid.innerHTML = '<p class="no-results">Không tìm thấy phim phù hợp</p>';
+      return;
+    }
+
+    movies.forEach(movie => {
+      const movieCard = document.createElement('div');
+      movieCard.className = 'media-card';
+      movieCard.dataset.movieId = movie.id;
+
+      movieCard.innerHTML = `
+        <div class="media-poster">
+          <img src="${movie.poster}" alt="${movie.title}">
+          <div class="media-hover">
+            <div class="rating">
+              <i class="fa-solid fa-star"></i>
+              <span>${movie.rating}</span>
+            </div>
+            <button class="btn-watch">Chi tiết</button>
+          </div>
+        </div>
+        <div class="media-info">
+          <h3 class="media-title">${movie.title}</h3>
+          <p class="media-creator">${movie.creator}</p>
+        </div>
+      `;
+
+      // Thêm event listener cho nút chi tiết trong mỗi card
+      const detailButton = movieCard.querySelector('.btn-watch');
+      detailButton.addEventListener('click', function() {
+        openMediaDetail(movie.id);
+      });
+      
+
+
+      allMoviesGrid.appendChild(movieCard);
+    });
+  }
+
+    // Thực hiện lọc lần đầu khi trang tải
+  function initializeGenreOptions() {
+    // Tạo danh sách thể loại từ database
+    const genres = new Set();
+
+    mediaDatabase.forEach(movie => {
+      const movieGenres = movie.genre.split(', ');
+      movieGenres.forEach(genre => genres.add(genre));
+    });
+
+    // Cập nhật tùy chọn thể loại
+    genreSelect.innerHTML = '<option value="all">Tất cả</option>';
+
+    genres.forEach(genre => {
+      const option = document.createElement('option');
+      option.value = genre.toLowerCase();
+      option.textContent = genre;
+      genreSelect.appendChild(option);
+    });
+    }
+
+  // Khởi tạo tùy chọn thể loại
+  initializeGenreOptions();
+  // Xử lý active cho navigation
+  const navLinks = document.querySelectorAll("nav ul li a");
+
+  navLinks.forEach(link => {
+    link.addEventListener("click", function () {
+      navLinks.forEach(l => l.classList.remove("active"));
+      this.classList.add("active");
+    });
+  });
+  const loginBtn = document.querySelector(".btn-login");
+  const loginModal = document.getElementById("loginModal");
+  const closeLoginModal = loginModal.querySelector(".close-modal");
+  const loginForm = document.getElementById("loginForm");
+  const usernameInput = document.getElementById("username");
+  const heroLoginBtn = document.getElementById("heroLoginBtn");
+  
+
+  function checkLoginStatus() {
+    const user = localStorage.getItem("user");
+    const heroGreeting = document.getElementById("heroGreeting");
+    const heroUsername = document.getElementById("heroUsername");
+
+    if (user) {
+      isLoggedIn = true;
+      Swal.fire({
+        title: 'Đăng nhập thành công!',
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+      });
+      loginBtn.textContent = `Xin chào, ${user}`;
+      loginBtn.classList.add("logged-in");
+
+      if (heroLoginBtn) heroLoginBtn.style.display = "none";
+      if (heroGreeting) {
+        heroGreeting.style.display = "block";
+        heroUsername.textContent = user;
+      }
+    } else {
+      loginBtn.textContent = "Đăng nhập";
+      loginBtn.classList.remove("logged-in");
+
+      if (heroLoginBtn) heroLoginBtn.style.display = "inline-block";
+      if (heroGreeting) heroGreeting.style.display = "none";
+    }
+  }
+  checkLoginStatus();
+  loginBtn.addEventListener("click", () => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      Swal.fire({
+        title: 'Bạn muốn đăng xuất?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Đăng xuất',
+        cancelButtonText: 'Hủy',
+        confirmButtonColor: '#F97316'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.clear(); // ✅ Xóa toàn bộ localStorage
+          checkLoginStatus();
+        
+          Swal.fire({
+            title: 'Đã đăng xuất!',
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false
+          });
+        
+          // Reload lại trang cho sạch sẽ
+          setTimeout(() => {
+            location.reload();
+          }, 1600);
+        }
+      });
+
+    } else {
+      loginModal.style.display = "block";
+      document.body.classList.add("modal-open");
+    }
+  });
+  closeLoginModal.addEventListener("click", () => {
+    loginModal.style.display = "none";
+    document.body.classList.remove("modal-open");
+  });
+
+  window.addEventListener("click", (e) => {
+    if (e.target === loginModal) {
+      loginModal.style.display = "none";
+      document.body.classList.remove("modal-open");
+    }
+  });
+
+  if (heroLoginBtn) {
+    heroLoginBtn.addEventListener("click", () => {
+      loginModal.style.display = "block";
+      document.body.classList.add("modal-open");
+    });
+  }
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const username = usernameInput.value.trim();
+    if (username) {
+      localStorage.setItem("user", username);
+      loginModal.style.display = "none";
+      document.body.classList.remove("modal-open");
+      checkLoginStatus();
+    }
+  });
+  document.addEventListener("click", function(e) {
+    const watchedBtn = e.target.closest(".btn-watched");
+    if (watchedBtn) {
+        const modalId = "mediaDetailModal"; // Hoặc lấy ID của modal hiện tại
+        if (modalStates[modalId].watched) {
+            // Xóa màu nền
+            watchedBtn.classList.remove("active");
+            
+        } else {
+            // Thêm màu nền
+            watchedBtn.classList.add("active");
+        }
+        modalStates[modalId].watched = !modalStates[modalId].watched;
+
+        // Thêm hoặc xóa tên phim vào danh sách đã xem
+        const mediaTitle = document.getElementById("modal-title").textContent;
+        const media = mediaDatabase.find(item => item.title === mediaTitle);
+
+        if (modalStates[modalId].watched) {
+            addToSaved(media, "watched");
+        } else {
+            removeFromSaved(media, "watched");
+        }
+    }
+  });
+
+  function addToSaved(media, type) {
+    const listElement = document.getElementById(type === "watched" ? "watchedList" : "watchlist");
+    const firstItem = listElement.querySelector("li");
+
+    // Xóa thông báo "Chưa có mục nào" nếu có
+    if (firstItem && firstItem.textContent === "Chưa có mục nào") {
+        listElement.innerHTML = "";
+    }
+
+    // Kiểm tra xem phim đã có trong danh sách chưa
+    const exists = [...listElement.querySelectorAll("li")].some(li => li.textContent === media.title);
+    if (!exists) {
+        const li = document.createElement("li");
+        li.textContent = media.title;
+        li.style.cursor = "pointer";
+        
+        // Thêm sự kiện mở lại modal chi tiết khi click
+        li.addEventListener("click", () => {
+          openMediaDetail(media.id);
+        });
+        
+        listElement.appendChild(li);
+      
+
+        const typeText = type === "watched" ? "Đã xem" : "Muốn xem";
         Swal.fire({
-          title: 'Đã đăng xuất!',
+          title: '🎉 Đã thêm!',
+          text: `${media.title} đã được thêm vào danh sách "${typeText}".`,
           icon: 'success',
           timer: 1500,
           showConfirmButton: false
         });
-      }
+        
+        
+        // Lưu vào localStorage
+        let listKey = type === "watched" ? "watchedList" : "watchlist";
+        let savedList = JSON.parse(localStorage.getItem(listKey)) || [];
+        if (!savedList.includes(media.title)) {
+          savedList.push(media.title);
+          localStorage.setItem(listKey, JSON.stringify(savedList));
+        }             
+    }
+  }
+
+  function removeFromSaved(media, type) {
+    const listElement = document.getElementById(type === "watched" ? "watchedList" : "watchlist");
+    const items = listElement.querySelectorAll("li");
+
+    items.forEach(item => {
+        if (item.textContent === media.title) {
+            item.remove();
+            const typeText = type === "watched" ? "Đã xem" : "Muốn xem";
+            Swal.fire({
+              title: '🗑️ Đã xóa!',
+              text: `${media.title} đã được gỡ khỏi danh sách "${typeText}".`,
+              icon: 'error',
+              timer: 1500,
+              showConfirmButton: false
+            });
+        }
     });
+
+
+    // Cập nhật localStorage
+    let listKey = type === "watched" ? "watchedList" : "watchlist";
+    let savedList = JSON.parse(localStorage.getItem(listKey)) || [];
+    savedList = savedList.filter(title => title !== media.title);
+    localStorage.setItem(listKey, JSON.stringify(savedList));
     
-  } else {
-    loginModal.style.display = "block";
-    document.body.classList.add("modal-open");
-  }
-});
-closeLoginModal.addEventListener("click", () => {
-  loginModal.style.display = "none";
-  document.body.classList.remove("modal-open");
-});
 
-window.addEventListener("click", (e) => {
-  if (e.target === loginModal) {
-    loginModal.style.display = "none";
-    document.body.classList.remove("modal-open");
+    // Nếu không còn mục nào, hiển thị lại thông báo
+    if (listElement.children.length === 0) {
+        const placeholder = document.createElement("li");
+        placeholder.textContent = "Chưa có mục nào";
+        listElement.appendChild(placeholder);
+    }
   }
-});
-
-if (heroLoginBtn) {
-  heroLoginBtn.addEventListener("click", () => {
-    loginModal.style.display = "block";
-    document.body.classList.add("modal-open");
-  });
-}
-loginForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const username = usernameInput.value.trim();
-  if (username) {
-    localStorage.setItem("user", username);
-    loginModal.style.display = "none";
-    document.body.classList.remove("modal-open");
-    checkLoginStatus();
-  }
-});
-document.addEventListener("click", function(e) {
-  const watchedBtn = e.target.closest(".btn-watched");
-  if (watchedBtn) {
-      const modalId = "mediaDetailModal"; // Hoặc lấy ID của modal hiện tại
-      if (modalStates[modalId].watched) {
-          // Xóa màu nền
-          watchedBtn.classList.remove("active");
-      } else {
-          // Thêm màu nền
-          watchedBtn.classList.add("active");
-      }
-      modalStates[modalId].watched = !modalStates[modalId].watched;
-
-      // Thêm hoặc xóa tên phim vào danh sách đã xem
-      const mediaTitle = document.getElementById("modal-title").textContent;
-      const media = mediaDatabase.find(item => item.title === mediaTitle);
-      
-      if (modalStates[modalId].watched) {
-          addToSaved(media, "watched");
-      } else {
-          removeFromSaved(media, "watched");
-      }
-  }
-});
-
-function addToSaved(media, type) {
-  const listElement = document.getElementById(type === "watched" ? "watchedList" : "watchlist");
-  const firstItem = listElement.querySelector("li");
-  
-  // Xóa thông báo "Chưa có mục nào" nếu có
-  if (firstItem && firstItem.textContent === "Chưa có mục nào") {
-      listElement.innerHTML = "";
-  }
-  
-  // Kiểm tra xem phim đã có trong danh sách chưa
-  const exists = [...listElement.querySelectorAll("li")].some(li => li.textContent === media.title);
-  if (!exists) {
-      const li = document.createElement("li");
-      li.textContent = media.title;
-      listElement.appendChild(li);
-      
-      showNotification(`${media.title} đã được thêm vào danh sách đã xem.`);
-      // Lưu vào localStorage
-      let watchedList = JSON.parse(localStorage.getItem("watchedList")) || [];
-      watchedList.push(media.title);
-      localStorage.setItem("watchedList", JSON.stringify(watchedList));
-  }
-}
-
-function removeFromSaved(media, type) {
-  const listElement = document.getElementById(type === "watched" ? "watchedList" : "watchlist");
-  const items = listElement.querySelectorAll("li");
-  
-  items.forEach(item => {
-      if (item.textContent === media.title) {
-          item.remove();
-          showNotification(`${media.title} đã được xóa khỏi danh sách đã xem.`);
-      }
-  });
-  
-  
-  // Cập nhật localStorage
-  let watchedList = JSON.parse(localStorage.getItem("watchedList")) || [];
-  watchedList = watchedList.filter(title => title !== media.title);
-  localStorage.setItem("watchedList", JSON.stringify(watchedList));
-  
-  // Nếu không còn mục nào, hiển thị lại thông báo
-  if (listElement.children.length === 0) {
-      const placeholder = document.createElement("li");
-      placeholder.textContent = "Chưa có mục nào";
-      listElement.appendChild(placeholder);
-  }
-}
-// Hàm khởi tạo trạng thái cho các modal
-function initializeModalState() {
+  // Hàm khởi tạo trạng thái cho các modal
+  function initializeModalState() {
   const watchedList = JSON.parse(localStorage.getItem("watchedList")) || [];
   const watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
 
-  // Cập nhật trạng thái cho các nút "Đã xem" dựa trên danh sách đã lưu
+  function renderList(list, elementId) {
+    const container = document.getElementById(elementId);
+    container.innerHTML = "";
+
+    if (list.length === 0) {
+      const placeholder = document.createElement("li");
+      placeholder.textContent = "Chưa có mục nào";
+      container.appendChild(placeholder);
+      return;
+    }
+
+    list.forEach(title => {
+      const media = mediaDatabase.find(item => item.title === title);
+      if (!media) return;
+
+      const li = document.createElement("li");
+      li.textContent = media.title;
+      li.style.cursor = "pointer";
+      li.addEventListener("click", () => {
+        openMediaDetail(media.id);
+      });
+
+      container.appendChild(li);
+    });
+  }
+
+  renderList(watchedList, "watchedList");
+  renderList(watchlist, "watchlist");
+
+  // Gắn class active cho nút trong card
   const mediaCards = document.querySelectorAll(".media-card");
   mediaCards.forEach(card => {
-      const title = card.querySelector(".media-title").textContent;
-      if (watchedList.includes(title)) {
-          card.querySelector(".btn-watched").classList.add("active");
-      }
+    const title = card.querySelector(".media-title").textContent;
+    if (watchedList.includes(title)) {
+      const btn = card.querySelector(".btn-watched");
+      if (btn) btn.classList.add("active");
+    }
+    if (watchlist.includes(title)) {
+      const btn = card.querySelector(".btn-watchlist");
+      if (btn) btn.classList.add("active");
+    }
   });
+  } 
+  // ⭐ Tạo hệ thống đánh giá sao cho trang chi tiết
+const detailRatingStars = document.getElementById("detailRatingStars");
+const feedbackText = document.getElementById("detailRatingFeedback");
+
+// Mảng nội dung phản hồi theo số sao
+const feedbacks = {
+  1: "Tệ 😞",
+  2: "Không hay lắm 😕",
+  3: "Tạm ổn 😐",
+  4: "Rất hay 😍",
+  5: "Tuyệt vời xuất sắc! 🌟"
+};
+
+// Khởi tạo ngôi sao có thể click
+function createInteractiveStars() {
+  detailRatingStars.innerHTML = "";
+  for (let i = 1; i <= 5; i++) {
+    const star = document.createElement("i");
+    star.className = "fa-regular fa-star";
+    star.dataset.value = i;
+
+    // Hover
+    star.addEventListener("mouseover", () => highlightStars(i));
+    star.addEventListener("mouseout", () => resetStars());
+    
+    // Click chọn
+    star.addEventListener("click", () => {
+      setRating(i);
+    });
+
+    detailRatingStars.appendChild(star);
+  }
 }
 
-initializeModalState();
-function showNotification(message) {
-  const notification = document.getElementById("notification");
-  notification.textContent = message;
-  notification.style.display = "block"; // Hiển thị thông báo
+let selectedRating = 0;
 
-  // Ẩn thông báo sau 3 giây
-  setTimeout(() => {
-      notification.style.display = "none";
-  }, 3000);
-}
+function highlightStars(count) {
+  [...detailRatingStars.children].forEach((star, idx) => {
+    star.className = idx < count ? "fa-solid fa-star" : "fa-regular fa-star";
   });
+  feedbackText.textContent = feedbacks[count];
+}
 
- 
+function resetStars() {
+  [...detailRatingStars.children].forEach((star, idx) => {
+    star.className = idx < selectedRating ? "fa-solid fa-star" : "fa-regular fa-star";
+  });
+  feedbackText.textContent = selectedRating > 0 ? feedbacks[selectedRating] : "";
+}
+
+function setRating(value) {
+  selectedRating = value;
+  feedbackText.textContent = feedbacks[value];
+
+  const currentMedia = getCurrentDetailMedia();
+  if (!currentMedia) return;
+
+  // Lấy dữ liệu hiện tại từ localStorage
+  let data = JSON.parse(localStorage.getItem("ratingsAndComments")) || {};
+  const mediaId = currentMedia.id;
+
+  // Ghi lại đánh giá sao
+  if (!data[mediaId]) data[mediaId] = { rating: 0, comments: [] };
+  data[mediaId].rating = value;
+
+  // Lưu lại
+  localStorage.setItem("ratingsAndComments", JSON.stringify(data));
+
+  Swal.fire({
+    title: `🎉 Cảm ơn bạn đã đánh giá ${value} sao!`,
+    text: feedbacks[value],
+    icon: "success",
+    timer: 1500,
+    showConfirmButton: false
+  });
+  }
+function getCurrentDetailMedia() {
+  const currentTitle = document.getElementById("detail-title").textContent;
+  return mediaDatabase.find(item => item.title === currentTitle);
+  }
+
+
+
+  initializeModalState();
+  
+});
+
+  

@@ -7,12 +7,13 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
 </head>
 <body>
     <header>
         <div class="container header-container">
             <div class="logo">
-                <a href="#">MovieApp</a>
+                <a href="#">DAKinema</a>
             </div>
             
             <div class="search-container">
@@ -30,8 +31,8 @@
                 <ul>
                     <li><a href="#" class="active">Trang chủ</a></li>
                     <li><a href="#trend">Xu hướng</a></li>
-                    <li><a href="#viet">Phim Việt</a></li>
                     <li><a href="#ng">Phim nước ngoài</a>
+                    <li><a href="#viet">Phim Việt</a></li>
                         <li class="nav-saved">
                             <a href="#">Kho lưu trữ</a>
                             <div class="saved-dropdown">
@@ -286,7 +287,98 @@
                     <h2>Phim Việt</h2>
                     <a href="#" class="view-all">Xem tất cả</a>
                 </div>
-                
+                <div class="media-grid">
+                    <!-- Phim 1 -->
+                    <div class="media-card" data-movie-id="11">
+                        <div class="media-poster">
+                            <img src="assets/phimviet/mai.png" alt="MAI">
+                            <div class="media-hover">
+                                <div class="rating">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>4.8</span>
+                                </div>
+                                <button class="btn-watch">Chi tiết</button>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3 class="media-title">Mai</h3>
+                            <p class="media-creator">Trấn Thành</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Phim 2 -->
+                    <div class="media-card" data-movie-id="12">
+                        <div class="media-poster">
+                            <img src="assets/phimviet/latmat7.png" alt="LM7">
+                            <div class="media-hover">
+                                <div class="rating">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>4.9</span>
+                                </div>
+                                <button class="btn-watch">Chi tiết</button>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3 class="media-title">Lật Mặt 7</h3>
+                            <p class="media-creator">Lý Hải</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Phim 3 -->
+                    <div class="media-card" data-movie-id="13">
+                        <div class="media-poster">
+                            <img src="assets/phimviet/lamgiauvoima.png" alt="Crullea">
+                            <div class="media-hover">
+                                <div class="rating">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>4.7</span>
+                                </div>
+                                <button class="btn-watch">Chi tiết</button>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3 class="media-title">Làm Giàu Với Ma</h3>
+                            <p class="media-creator">Nhật Trung</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Phim 4 -->
+                    <div class="media-card" data-movie-id="14">
+                        <div class="media-poster">
+                            <img src="assets/phimviet/botubaothu.png" alt="Avengers">
+                            <div class="media-hover">
+                                <div class="rating">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>4.6</span>
+                                </div>
+                                <button class="btn-watch">Chi tiết</button>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3 class="media-title">Bộ Tứ Bảo Thủ</h3>
+                            <p class="media-creator">Trấn Thành</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Phim 5 -->
+                    <div class="media-card" data-movie-id="15">
+                        <div class="media-poster">
+                            <img src="assets/phimviet/quycau.png" alt="Avatar">
+                            <div class="media-hover">
+                                <div class="rating">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>4.3</span>
+                                </div>
+                                <button class="btn-watch">Chi tiết</button>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3 class="media-title">Quỷ Cẩu</h3>
+                            <p class="media-creator">Lưu Thành Luân</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
                 <!-- Thêm grid phim phổ biến tương tự như phần trên -->
             </div>
         </section>
@@ -296,14 +388,14 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
-                    <a href="#">MovieApp</a>
+                    <a href="#">DAKinema</a>
                 </div>
-                <p>&copy; 2025 MovieApp. Tất cả quyền được bảo lưu.</p>
+                <p>&copy; 2025 DAKinema. Tất cả quyền được bảo lưu.</p>
             </div>
         </div>
     </footer>
        <!-- Modal chi tiết phim -->
-       <div id="mediaDetailModal" class="modal">
+    <div id="mediaDetailModal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
             
@@ -324,7 +416,7 @@
                     </div>
                     
                     <div class="media-creator">
-                        <strong>Đạo diễn/Tác giả:</strong> <span id="modal-creator"></span>
+                        <strong>Đạo diễn:</strong> <span id="modal-creator"></span>
                     </div>
                     
                     <div class="rating-container">
@@ -360,7 +452,7 @@
         </div>
     </div>
         <!-- Trang chi tiết phim -->
-<div id="detailPage" class="detail-page">
+    <div id="detailPage" class="detail-page">
     <div class="detail-header">
         <div class="container">
             <button class="btn-back">
@@ -382,30 +474,44 @@
                     <span class="rating-count" id="detail-rating-count"></span>
                 </div>
             </div>
-
-            <div class="detail-info">
-                <div class="detail-meta">
-                    <span class="year" id="detail-year"></span>
-                    <span class="divider">•</span>
-                    <span class="genre" id="detail-genre"></span>
-                    <span class="divider">•</span>
-                    <span class="duration" id="detail-duration"></span>
+            <div class="detail-context">
+                <div class="detail-info">
+                    <div class="detail-meta">
+                        <span class="year" id="detail-year"></span>
+                        <span class="divider">•</span>
+                        <span class="genre" id="detail-genre"></span>
+                        <span class="divider">•</span>
+                        <span class="duration" id="detail-duration"></span>
+                    </div>
+                    <div class="detail-creator">
+                        <strong>Đạo diễn: </strong> <span id="detail-creator"></span>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-watched">
+                            <i class="fa-solid fa-check"></i> Đã xem/đọc
+                        </button>
+                        <button class="btn-watchlist">
+                            <i class="fa-solid fa-bookmark"></i> Muốn xem/đọc
+                        </button>
+                    </div>
                 </div>
-
-                <div class="detail-creator">
-                    <strong>Đạo diễn/Tác giả:</strong> <span id="detail-creator"></span>
-                </div>
-
-                <div class="action-buttons">
-                    <button class="btn-watched">
-                        <i class="fa-solid fa-check"></i> Đã xem/đọc
-                    </button>
-                    <button class="btn-watchlist">
-                        <i class="fa-solid fa-bookmark"></i> Muốn xem/đọc
-                    </button>
+                <div class="detail-comments">
+                    <h3>Bình luận</h3>
+                    <textarea id="commentInput" placeholder="Viết bình luận của bạn..." rows="4"></textarea>
+                    <button id="submitComment" class="btn-submit-comment">Gửi</button>
+                    <div id="commentList" class="comment-list">
+                        <!-- Bình luận sẽ được thêm vào đây -->
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="rating-container">
+    <h3>Đánh giá:</h3>
+    <div class="rating-stars" id="detailRatingStars">
+        <!-- Các ngôi sao sẽ được tạo bằng JS -->
+    </div>
+    <p id="detailRatingFeedback" class="rating-feedback"></p>
+</div>
 
         <div class="detail-video">
             <h3>Trailer</h3>
@@ -426,9 +532,9 @@
             </div>
         </div>
     </div>
-</div>
-    <!-- Trang xem tất cả phim -->
-<div id="allMoviesPage" class="all-movies-page">
+    </div>
+        <!-- Trang xem tất cả phim -->
+    <div id="allMoviesPage" class="all-movies-page">
     <div class="all-movies-header">
         <div class="container">
             <button class="btn-back all-movies-back">
@@ -465,22 +571,21 @@
             <!-- Movies will be added here by JavaScript -->
         </div>
     </div>
-</div>
-<div id="notification" class="notification" style="display: none;"></div>
-<!-- Modal đăng nhập -->
-<div id="loginModal" class="modal">
-    <div class="modal-content" style="max-width: 400px;">
-      <span class="close-modal">&times;</span>
-      <h2>Đăng nhập</h2>
-      <form id="loginForm">
-        <div style="margin: 15px 0;">
-          <input type="text" id="username" placeholder="Tên người dùng" required style="width: 100%; padding: 10px;">
-        </div>
-        <button type="submit" class="btn-login" style="width: 100%;">Đăng nhập</button>
-      </form>
     </div>
-  </div>
-  
+        <!-- Modal đăng nhập -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="close-modal">&times;</span>
+            <h2>Đăng nhập</h2>
+            <form id="loginForm">
+                <div style="margin: 15px 0;">
+                    <input type="text" id="username" placeholder="Bạn tên là gì?" required style="width: 100%; padding: 10px;">
+                </div>
+                <button type="submit" class="btn-login" style="width: 100%;">Đăng nhập</button>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
